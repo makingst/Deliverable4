@@ -14,17 +14,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;  
 import java.util.Date;
 
-/**
-* This program illustrates the multiple ways to query a database through simple statements, prepared statements
-* exporting the entire database into XML format and updating the database itself
-*
-* Completion time: 13 hours
-* Date last modified: 6/23/2020
-*
-* @author Tristen Young
-* @version 1.0
-*/
-
 
 public class Customer {
 
