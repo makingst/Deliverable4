@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;  
 import java.util.Date;
 
-
 public class Customer {
 
     //TODO: Add in a "Did you mean?" feature if time
@@ -157,17 +156,145 @@ public class Customer {
         }
     }
 
-    //TODO: Method updating device
-
     //TODO: Method update customer information
+    /*updating a customers email is a bit complicated since 
+    its a primary key that is refered to pretty often
+    therefore we should change it if we have time,but until then an "updated" email
+    should be treated as in insert*/
+        //TODO: Method for signing up
+    public static void updateCustomer(Connection conn, PreparedStatement st, ResultSet rs, String email,
+    long phone_number, String first_name, char middle_initial, String last_name, String street,
+    String city, String state, int zip_code ) throws SQLException{
+        
+        conn.setAutoCommit(false);
+
+        String query = "UPDATE CUSTOMER SET"
+        + " PhoneNumber = ?,"
+        + " FirstName = ?,"
+        + " MiddleInitial = ?,"
+        + " LastName = ?,"
+        + " Street = ?,"
+        + " City = ?,"
+        + " State = ?,"
+        + " ZipCode = ? WHERE Email = ?;";
+
+        try{
+	        st = conn.prepareStatement(query);
+            st.setString(1, "" + phone_number);
+            st.setString(2, first_name);
+            st.setString(3, "" + middle_initial);
+            st.setString(4, last_name);
+            st.setString(5, street);
+            st.setString(6, city);
+            st.setString(7, state);
+            st.setString(8, "" + zip_code);
+            st.setString(9, email);
+	        int result = st.executeUpdate();
+
+            if(result != -1){
+                System.out.println("SUCCESS");
+            }else{
+                System.out.println("FAILURE");
+            }
+
+            conn.commit();
+            return; 
+        }catch(Exception exc){
+            System.out.println("updateCustomer is not currently working");
+            exc.printStackTrace();
+        }
+    }
+
 
     //TODO: Method update order
+    public static void updateOrder(Connection conn, PreparedStatement st, ResultSet rs, long order_number, String date,
+    long total, long employee_id, String email, long item_number ) throws SQLException{
 
-    //TODO: Method delete device
+        conn.setAutoCommit(false);
+
+        String query = "UPDATE ORDERS SET"
+        + " Date = ?,"
+        + " Total = ?,"
+        + " EmployeeID = ?,"
+        + " Email = ?,"
+        + " ItemNumber = ? WHERE OrderNumber = ?;";
+
+        try{
+	        st = conn.prepareStatement(query);
+            st.setString(1, date);
+            st.setString(2, "" + total);
+            st.setString(3, "" + employee_id);
+            st.setString(4, email);
+            st.setString(5, "" + item_number);
+            st.setString(6, "" + order_number);
+	        int result = st.executeUpdate();
+
+            if(result != -1){
+                System.out.println("SUCCESS");
+            }else{
+                System.out.println("FAILURE");
+            }
+
+            conn.commit();
+            return; 
+        }catch(Exception exc){
+            System.out.println("updateOrder is not currently working");
+            exc.printStackTrace();
+        }
+    }
 
     //TODO: Method delete customer
+    public static void deleteCustomer(Connection conn, PreparedStatement st, ResultSet rs, String email) throws SQLException{
+        
+        conn.setAutoCommit(false);
+
+        String query = " DELETE FROM CUSTOMER WHERE Email = ?;";
+
+        try{
+	        st = conn.prepareStatement(query);
+            st.setString(1, email);
+	        int result = st.executeUpdate();
+
+            if(result != -1){
+                System.out.println("SUCCESS");
+            }else{
+                System.out.println("FAILURE");
+            }
+
+            conn.commit();
+            return; 
+        }catch(Exception exc){
+            System.out.println("deleteCustomer is not currently working");
+            exc.printStackTrace();
+        }
+    }
 
     //TODO: Method delete order
+    //TODO: Will require changing the create schema to allow cascade delete on foreign keys
+    public static void deleteOrder(Connection conn, PreparedStatement st, ResultSet rs, String order_number) throws SQLException{
+        
+        conn.setAutoCommit(false);
+
+        String query = " DELETE FROM ORDERS WHERE OrderNumber = ?;";
+
+        try{
+	        st = conn.prepareStatement(query);
+            st.setString(1, order_number);
+	        int result = st.executeUpdate();
+
+            if(result != -1){
+                System.out.println("SUCCESS");
+            }else{
+                System.out.println("FAILURE");
+            }
+
+            conn.commit();
+            return; 
+        }catch(Exception exc){
+            System.out.println("deleteOrder is not currently working");
+            exc.printStackTrace();
+        }
+    }
     
 	public static void main(String[] args){
 
@@ -214,9 +341,35 @@ public class Customer {
                     System.out.println("Error message here"); //TODO: parse input
                     e.printStackTrace();
                 }
-            
+            }else if(args[4].equals("updateCustomer") && args.length > 5){
+                try{
+                    updateCustomer(conn,st,rs,args[5],Long.parseLong(args[6]),args[7],
+                    args[8].charAt(0),args[9],args[10], args[11], args[12], Integer.parseInt(args[13]));
+                }catch(Exception e){
+                    System.out.println("Error message here"); //TODO: parse input
+                }
+            }else if(args[4].equals("updateOrder") && args.length > 5){ //TODO: check date...with perhaps regex. Date class doesnt work
+                try{  
+                    updateOrder(conn,st,rs,Long.parseLong(args[5]),args[6],Long.parseLong(args[7]),
+                    Long.parseLong(args[8]),args[9],Long.parseLong(args[10]));
+                }catch(Exception e){
+                    System.out.println("Error message here"); //TODO: parse input
+                    e.printStackTrace();
+                }
+            }else if(args[4].equals("deleteCustomer") && args.length > 5){
+                try{
+                    deleteCustomer(conn,st,rs,args[5]);
+                }catch(Exception e){
+                    System.out.println("Error message here"); //TODO: parse input
+                }
+            }else if(args[4].equals("deleteOrder") && args.length > 5){
+                try{
+                    deleteOrder(conn,st,rs,args[5]);
+                }catch(Exception e){
+                    System.out.println("Error message here"); //TODO: parse input
+                }
             }else{
-                System.out.println("Inform user how to use this here"); //Fill this out here
+                System.out.println("Inform user how to use this here"); //TODO:Fill this out here
                 System.exit(0);
             }
 		}
@@ -241,3 +394,4 @@ public class Customer {
 		}
     }
 }
+
