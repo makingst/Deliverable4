@@ -5,6 +5,7 @@
 - Then enter the new database created with `USE ELECTRONICS_STORE` and run the script
   `SOURCE /path/to/team10_insert.sql`
 - Finally to see the data in the table run the script `SOURCE team10_select.sql` where there should comments describing the simple select statements beig run
+-Make sure this is up to date after every new commit
 
 # Usage Of Individual Java Classes
 
