@@ -18,11 +18,13 @@ closeConnection at the end of a method
 
 ## Customer.java
 
-compile class:
+Compile class:
 javac -d classes -cp ./lib/json-simple-1.1.1.jar src/ser322/ConnectDB.java src/ser322/Customer.java
 
 Excute Class: java -cp lib/json-simple-1.1.1.jar:lib/mysql-connector-java-5.1.45-bin.jar:classes ser322.Customer <parameters>
 
 -Methods assume `db.getConnection("jdbc:mysql://localhost/ELECTRONICS_STORE", "root", "root", "com.mysql.jdbc.Driver");` currently
+
 -SELECT queries return JSON while all other queries return Strings
+
 -Error messages are vague and not all user data is properly handled
